@@ -59,24 +59,24 @@
 
 ### `search_listings`
 
-- **What it does:**
-- **Inputs:** <!-- name and type each: `max_price` (float), not "a price" -->
-- **Returns:**
-- **When it has nothing:**
+- **What it does:** Searches listings for items that matches a description, and optionally a size and a price ceiling.
+- **Inputs:** `description` (str), `size` (str), `max_price` (float)
+- **Returns:** A list of listing dictionaries with keys `id`, `title`, `description`, `category`, `style_tags`, `size`, `condition`, `price`, `colors`, `brand`, and `platform`.
+- **When it has nothing:** Returns an empty list.
 
 ### `suggest_outfit`
 
-- **What it does:**
-- **Inputs:**
-- **Returns:**
-- **When it has nothing:**
+- **What it does:** Suggests one or two outfits from a a new trifted item and the user's wardrobe.
+- **Inputs:** `new_item` (dict), `wardrobe` (dict)
+- **Returns:** A non-empty string with outfit suggestions.
+- **When it has nothing:** Returns a non-empty string with general styling advice or an empty string.
 
 ### `create_fit_card`
 
-- **What it does:**
-- **Inputs:**
-- **Returns:**
-- **When it has nothing:**
+- **What it does:** Writes a media caption a real person would post about a thrifted item find.
+- **Inputs:** `outfit` (str), `new_item` (dict)
+- **Returns:** A string caption with two to four sentences that mentions the item, its price and platform, and its vibe.
+- **When it has nothing:** If `outfit` is empty or whitespace, returns a descriptive message as a string.
 
 ---
 
@@ -93,13 +93,19 @@
      The grader checks your code against what you claim here, so the file and
      function have to be real. -->
 
-**Branch rule:**
+**Branch rule:** If `search_listings` returns fewer than one result, store 'No listings found under this price or size' in the session state and stop the loop. Otherwise, save the top result and proceed to `suggest_outfit`.
 
 **Where it lives:** `agent.py::run_agent`
 
-**How the query is parsed:** <!-- regex, string splitting, or asking the model — say which -->
+**How the query is parsed:** <!-- regex, string splitting, or asking the model — say which --> Regex and string splitting
 
-**What moves through the session:** <!-- which fields, in what order -->
+**What moves through the session:** <!-- which fields, in what order --> 
+     1. `query` is `parsed` for `description`, `size`, `max_price`.
+     2. `search_results` is set to a list of dictionaries with fields `id`, `title`, `description`, `category`, `style_tags`, `size`, `condition`, `price`, `colors`, `brand`, and `platform` if matching listings are found.
+     3. `selected_item` is set to the first result in `search_results`.
+     4. `selected_item` and `wardrobe` passed to `suggest_outfit`, and sets the result to `outfit_suggestion`.
+     5. `outfit_suggestion` and `selected_item` passed to `create_fit_card`, and sets the result to `fit_card`.
+     6. On the empty-search branch, `error` is set after `search_results` and the last three stays `None`.
 
 ---
 
