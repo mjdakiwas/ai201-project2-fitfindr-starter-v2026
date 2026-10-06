@@ -24,7 +24,7 @@ data earns credit; *"80% seemed reasonable"* does not.
 Given a query that matches at least one listing, the agent completes all three
 tool calls and returns a fit card — in at least 4 of 5 tries.
 
-**Why this target:**
+**Why this target:** My search's keyword overlap only matches query's words that is exact match to words in the listing data, so words that could semantically mean the same is not registered the same by the agent. For example, tshirt is not the same as t shirt so the agent will not evaluate a match. Therefore, there's a chance that a try will fail.
 <!-- Why 4 of 5 and not 5 of 5? Something about your search, probably —
      "my search is a plain keyword match and some phrasings will miss" is a
      real answer. -->
@@ -36,7 +36,7 @@ tool calls and returns a fit card — in at least 4 of 5 tries.
 Given a query that matches no listings, the agent stops before calling
 `suggest_outfit` and returns a message naming what to change — 5 of 5 tries.
 
-**Why this target:**
+**Why this target:** System is designed deterministic to stop running and return a message whenever there's no listing match, and no LLM runs. Therefore it will hit the criteria for 5 of 5 tries. 
 <!-- Why is 5 of 5 reasonable here when criterion 1 isn't? What's different
      about this path? -->
 
@@ -53,11 +53,10 @@ Given a query that matches no listings, the agent stops before calling
      look like state failure — it looks like a tool problem. Something that
      compares session["selected_item"] against what actually reached
      suggest_outfit is the shape you're after. -->
+Given a successful search, the unique id of the `selected_item` set by `search_listings` matches the id passed as the `new_item` argument in `suggest_outfit` for 5 of 5 runs.
 
 
-
-**Why this target:**
-
+**Why this target:** Reading and passing keys within Python dictionary session state is deterministic code. We explicitly pass the exact dictionary from `selected_item` set by `search_listings` to `new_item` argument in `suggest_outfit`, so this will always occur with the same result for 5 of 5 runs.
 
 
 ---
@@ -74,10 +73,10 @@ Given a query that matches no listings, the agent stops before calling
      mentions the price? Two different items producing the same opening
      sentence? A card longer than a caption anyone would post? Any of those can
      be turned into a number. -->
+`create_fit_card` returns a string caption between 2 and 4 sentences long that explicitly includes the item's title/name, price, platform, and vibe — in at least 4 of 5 tries.
 
 
-
-**Why this target:**
+**Why this target:** I picked 4 of 5 because `create_fit_card` relies on a generative LLM. While prompt engineering instructs the model to include price, platform, and sentence bounds, non-deterministic model variance can cause it to omit a field or write too many sentence.
 
 
 
@@ -91,10 +90,10 @@ Given a query that matches no listings, the agent stops before calling
      wardrobe path, what happens when the model can't be reached, whether the
      search respects a price ceiling — anything, as long as it names a number
      or an observable outcome. -->
+Given a valid search result and an empty wardrobe array, `suggest_outfit` returns general styling advice without throwing an error or hallucinating non-existent closet items, allowing the pipeline to produce a valid fit card in at least 4 of 5 tries.
 
 
-
-**Why this target:**
+**Why this target:** Handling an empty list in Python is deterministic, but guiding the model to fall back on general styling principles rather than hallucinating user items relies on LLM prompt adherence. To account for that variable, I opted to succeed in 4 tries.
 
 
 
