@@ -41,7 +41,7 @@
 
 <!-- Three or four sentences: what a user asks for, and what they get back. -->
 
-
+A user asks for a secondhand item in plain language, for example, `python app.py ask 'vintage graphic tee under $30'`. FitFindr pulls a description, a size and a price ceiling out of that sentence, then searches thrift listings for the closest match. If nothing matches, it stops there and says which filter to loosen, rather than styling an item it never found. If something does match, it takes the top result, suggests two outfits built from pieces already in the user's saved wardrobe, and writes a short caption about the find (naming the item, what it cost, which platform it came from, and the vibe). What comes back is one listing, two outfits, and a caption worth posting.
 
 ---
 
@@ -166,15 +166,15 @@ $ python -c "from tools import create_fit_card; from utils.data_loader import lo
 
 **Moment 1**
 
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
+- *What I asked for:* I asked Claude to complete the tools functions in tools.py based off the tools specs I wrote in the README under Tool Inventory.
+- *What came back:* Claude completed all three tools.
+- *What I changed:* `search_listings` had a bug which stipped every trailing "s", so I changed that to account for words like "dresses".
 
 **Moment 2**
 
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
+- *What I asked for:* I asked Claude to wire the loop and the state following my branch rule in the README.
+- *What came back:* Claude filled in `run_agent()` in `agent.py`.
+- *What I changed:* Claude provided sufficient code that successfully returned proper messages for a happy path and a query that matches nothing, therefore I didn't have to change anything.
 
 <!-- ═══════════════════════ UNIT 4 — THE TEST ═══════════════════════
 
